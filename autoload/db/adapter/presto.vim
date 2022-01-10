@@ -6,7 +6,12 @@ let g:autoloaded_db_presto = 1
 function! s:command_for_url(params) abort
   let cmd = ['presto']
   for [k, v] in items(a:params)
-    call extend(cmd, '--' . k, v)
+    if v != ''
+        call extend(cmd, ['--' . k, v])
+    else
+        call extend(cmd, ['--' . k])
+    endif
+
   endfor
   return cmd
 endfunction
@@ -19,9 +24,16 @@ function! s:params(url) abort
   endif
   if has_key(params, 'port')
     let presto_params.server .= ':'.params.port
+    if params.port == 443
+      let presto_params.server = 'https://' . presto_params.server
+    endif
   endif
   if has_key(params, 'user')
     let presto_params.user = params.user
+  endif
+   if has_key(params, 'password')
+    let presto_params.password = ''
+    let $PRESTO_PASSWORD = params.password
   endif
   if has_key(params, 'path')
     let path = split(params.path, '/')
