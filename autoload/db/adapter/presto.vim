@@ -2,7 +2,10 @@ let s:cmd = !executable('presto') && executable('trino') ? 'trino' : 'presto'
 function! s:command_for_url(options) abort
   let cmd = [s:cmd]
   for [k, v] in items(a:options)
-    call extend(cmd, ['--' . k, v])
+    if v != ''
+      call extend(cmd, ['--' . k, v])
+    else
+      call extend(cmd, ['--' . k])
   endfor
   return cmd
 endfunction
@@ -13,9 +16,16 @@ function! s:options(url) abort
   let options.server = get(url, 'host', 'localhost')
   if has_key(url, 'port')
     let options.server .= ':' . url.port
+    if url.port == 443
+      let options.server = 'https://' . options.server
+    endif
   endif
   if has_key(url, 'user')
     let options.user = url.user
+  endif
+  if has_key(url, 'password')
+    let options.password = ''
+    let $PRESTO_PASSWORD = url.password
   endif
   if has_key(url, 'path')
     let path = split(url.path, '/')
