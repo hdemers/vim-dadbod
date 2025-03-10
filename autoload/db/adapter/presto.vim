@@ -6,6 +6,7 @@ function! s:command_for_url(options) abort
       call extend(cmd, ['--' . k, v])
     else
       call extend(cmd, ['--' . k])
+    endif
   endfor
   echom string(cmd)
   return cmd
