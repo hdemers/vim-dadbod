@@ -7,6 +7,7 @@ function! s:command_for_url(options) abort
     else
       call extend(cmd, ['--' . k])
   endfor
+  vim.print(cmd)
   return cmd
 endfunction
 
@@ -41,7 +42,6 @@ endfunction
 
 function! db#adapter#presto#interactive(url) abort
   vim.print(s:command_for_url(s:options(a:url)))
-  echo(s:command_for_url(s:options(a:url)))
   return s:command_for_url(s:options(a:url))
 endfunction
 
