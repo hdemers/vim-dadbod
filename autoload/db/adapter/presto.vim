@@ -7,7 +7,7 @@ function! s:command_for_url(options) abort
     else
       call extend(cmd, ['--' . k])
   endfor
-  vim.print(cmd)
+  echom string(cmd)
   return cmd
 endfunction
 
@@ -17,9 +17,9 @@ function! s:options(url) abort
   let options.server = get(url, 'host', 'localhost')
   if has_key(url, 'port')
     let options.server .= ':' . url.port
-    " if url.port == 443
-    "   let options.server = 'https://' . options.server
-    " endif
+    if url.port == 443
+      let options.server = 'https://' . options.server
+    endif
   endif
   if has_key(url, 'user')
     let options.user = url.user
@@ -41,12 +41,12 @@ function! s:options(url) abort
 endfunction
 
 function! db#adapter#presto#interactive(url) abort
-  vim.print(s:command_for_url(s:options(a:url)))
+  echom string(s:command_for_url(s:options(a:url)))
   return s:command_for_url(s:options(a:url))
 endfunction
 
 function! db#adapter#presto#input(url, in) abort
-  vim.print(db#adapter#presto#interactive(a:url))
+  echom string(db#adapter#presto#interactive(a:url))
   return db#adapter#presto#interactive(a:url) + ['--output-format', 'ALIGNED', '--file', a:in]
 endfunction
 
