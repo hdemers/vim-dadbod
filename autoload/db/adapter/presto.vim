@@ -40,6 +40,7 @@ function! s:options(url) abort
 endfunction
 
 function! db#adapter#presto#interactive(url) abort
+  vim.print(s:command_for_url(s:options(a:url)))
   return s:command_for_url(s:options(a:url))
 endfunction
 
